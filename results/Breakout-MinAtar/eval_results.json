@@ -1,0 +1,11 @@
+{
+  "task": "Breakout-MinAtar",
+  "checkpoint_step": 299984,
+  "n_episodes": 100,
+  "policy": "greedy-argmax",
+  "return_mean": 14.76,
+  "return_std": 3.972706885739244,
+  "return_min": 9.0,
+  "return_max": 20.0,
+  "length_mean": 147.12
+}

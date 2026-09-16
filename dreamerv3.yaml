@@ -1,0 +1,44 @@
+env:
+  task: 'Breakout-MinAtar'   
+
+train:
+  batch_size: 16
+  batch_length: 64
+  num_envs: 16
+  steps: 300000
+  img_length: 15
+  gamma: 0.997          
+  v_min: -20
+  v_max: 20
+  n_bins: 255
+  free_nats: 1.0
+  actent: 0.0003            
+  replay_ratio: 32         
+  actor_ret_limit: 1.0
+  actor_ret_decay: 0.01
+  critic_ema_reg: 1.0
+  critic_ema_tau: 0.02
+  lambd: 0.95
+
+loss_scales:
+  rec: 1.0
+  rew: 1.0
+  con: 1.0
+  dyn: 1.0
+  rep: 0.1
+  policy: 1.0
+  value: 1.0
+  repval: 0.3
+
+opt:
+  lr: 0.00004
+  agc: 0.3
+  warmup: 1000           
+
+replay:
+  size: 300000
+  directory: 'replay_v3'
+
+model:
+  obs_embed_dim: 2048
+  state_dim: 5120

@@ -1,0 +1,6 @@
+checkpoints/
+replay_*/
+__pycache__/
+*.pyc
+*.pkl
+*.dat
