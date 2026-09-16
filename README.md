@@ -1,6 +1,6 @@
 # DreamerV3 in Pure JAX
 
-This repo is an implementation of DreamerV3 : 
+This repo is an implementation of DreamerV3 : [Blog Link]
 
 A from-scratch reimplementation of [DreamerV3](https://arxiv.org/abs/2301.04104) in JAX, Ninjax, and Flax. Built as a readable, single-purpose codebase: one training script, three source files, one config. The current hyperparameters follow the reference implementation defaults and the model is sized to the paper's 50M configuration. The codebase is designed to be readable and flexible for anyone working on world-model RL.
 
@@ -15,42 +15,10 @@ A from-scratch reimplementation of [DreamerV3](https://arxiv.org/abs/2301.04104)
 
 ## Architecture
 
-```mermaid
-flowchart TD
-    subgraph WM ["1. World Model (RSSM)"]
-        OBS["Observation x_t (64, 64, 3)"] --> ENC["CNN Encoder (e_t: 2048)"]
-        CTX["Past Context: h_(t-1), z_(t-1), a_(t-1)"] --> GRU["BlockGRU, 8 Groups (h_t: 4096)"]
-        ENC --> POST["Posterior q(z_t | h_t, e_t)"]
-        GRU --> POST
-        GRU --> PRIOR["Prior p(z_t | h_t)"]
-        POST --> ZT["Discrete Latent z_t (1024)"]
-        PRIOR -.->|KL Balancing| POST
-    end
-
-    WM ==> STATE["Full Latent State: s_t = (h_t, z_t) (dim 5120)"]
-
-    subgraph HEADS ["2. Predictor Heads"]
-        DEC["Image Decoder (64, 64, 3) | Plain MSE"]
-        REW["Reward Predictor (255 Bins) | TwoHot CE"]
-        CON["Continue Predictor (1 Logit) | Discount BCE"]
-    end
-
-    STATE --> DEC
-    STATE --> REW
-    STATE --> CON
-
-    subgraph AC ["3. Actor-Critic (Imagination)"]
-        ROLL["15-Step Imagination Rollout (1008 Starts)"]
-        ACT["Actor Policy (3 Logits) | Entropy Bonus 3e-4"]
-        CRIT["Fast Critic V (255 Bins) and Slow Critic (EMA)"]
-        REP["RepVal Grounding: 0.3x CE on Real Replay"]
-        ROLL --> ACT
-        ROLL --> CRIT
-        REP -.-> CRIT
-    end
-
-    STATE ==> ROLL
-```
+<p align="center">
+  <img src="results/Breakout-MinAtar/dreamerv3_arch.png" width="650"/>
+</p>
+<p align="center"><i>Figure: Hafner et al. (Nature, 2023). (a) World Model trains on raw sensory inputs. (b) Actor-Critic policy trains entirely inside the model's imagined latent rollouts.</i></p>
 
 ---
 
@@ -75,7 +43,7 @@ Validated on MiniAtar Breakout for 300,000 environment steps. Evaluated with a d
 ### Evaluation Distribution
 
 <p align="center">
-  <img src="results/Breakout-MinAtar/fig_eval.png" width="750"/>
+  <img src="results/Breakout-MinAtar/fig_eval.png" width="580"/>
 </p>
 
 ### Training Diagnostics
@@ -101,7 +69,6 @@ Validated on MiniAtar Breakout for 300,000 environment steps. Evaluated with a d
     └── Breakout-MinAtar/   # figures, GIFs, and evaluation logs
 ```
 
-
 ---
 
 ## Quick Start
@@ -111,14 +78,20 @@ pip install -r requirements.txt
 python train.py
 ```
 
-Environment and training parameters are configured via `dreamerv3.yaml`. To switch to another environment:
+Environment and training parameters are configured via `dreamerv3.yaml`. To switch to another MinAtar game:
 
 ```yaml
 env:
   task: 'Asterix-MinAtar'
 ```
 
-The default hyperparameters follow the reference implementation. For other environments, you may need to adjust `actent`, `lr`, or extend `steps` beyond 300k. Complex environments like Asterix require more environment steps for the actor policy to discover high-reward trajectories.
+### Environment Support & Extensibility
+
+This codebase currently only supports **MinAtar** out of the box. The environment wrapper (`GymnaxVec`) and the sequence replay buffer in `src/data.py` are explicitly designed for MinAtar observation formats and rendering.
+
+To use custom environments or other suites (like Atari, Crafter, or DM Control):
+- **Replay Buffer & Task Wrapper (`src/data.py`)**: You will need to write a wrapper conforming to the step/reset interface and adapt the replay buffer storage tensors to match your environment's native observation shapes.
+- **Actor Class (`src/model.py`)**: The `Actor` class is currently parameterized for discrete categorical action spaces. For continuous control (e.g. DM Control), you will need to modify the Actor head to output continuous distributions (e.g. squashed normal/tanh).
 
 ---
 
@@ -137,7 +110,7 @@ The default hyperparameters follow the reference implementation. For other envir
   author       = {Omojire Kuseju},
   title        = {{DreamerV3} from Scratch in Pure {JAX}},
   year         = {2026},
-  url          = {https://github.com/ojayballer/somnix}
+  url          = {https://github.com/ojayballer/BeyondImagination}
 }
 ```
 
