@@ -65,7 +65,7 @@ class BlockGRUCell(nj.Module):
         gates = jnp.reshape(gates,(*batch_dims, self.groups, -1))
         r, z, n = [jnp.reshape(g,(*batch_dims, -1)) for g in jnp.split(gates,3,axis=-1)]
         r = jax.nn.sigmoid(r)
-        z = jax.nn.sigmoid(z)
+        z = jax.nn.sigmoid(z + 1.0)
         n = jnp.tanh(r * n)
         h = (1.0-z)*n+z*h
         return h
