@@ -99,7 +99,6 @@ To use custom environments or other suites (like Atari, Crafter, or DM Control):
 
 1. Hafner, D., Pasukonis, J., Ba, J., & Lillicrap, T. (2023). [Mastering Diverse Domains through World Models](https://arxiv.org/abs/2301.04104). Nature.
 2. Young, K. & Tian, T. (2019). [MinAtar: An Atari-Inspired Testbed for Thorough and Reproducible Reinforcement Learning Experiments](https://arxiv.org/abs/1903.03176).
-3. Rodriguez-Sanchez, R. (2025). [DreamerV3 Pure JAX (Readable, Minimal)](https://github.com/rafarodsa/dreamer-v3-purejax).
 
 ---
 
