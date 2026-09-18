@@ -1,6 +1,6 @@
 # DreamerV3 in Pure JAX
 
-This repo is an implementation of DreamerV3 : [Blog Link]
+[![Blog Post](https://img.shields.io/badge/Read_the_Blog_Post-Beyond_Imagination-blue?style=for-the-badge)](https://ojayballer.github.io/dreamerv3.html)
 
 A from-scratch reimplementation of [DreamerV3](https://arxiv.org/abs/2301.04104) in JAX, Ninjax, and Flax. Built as a readable, single-purpose codebase: one training script, three source files, one config. The current hyperparameters follow the reference implementation defaults and the model is sized to the paper's 50M configuration. The codebase is designed to be readable and flexible for anyone working on world-model RL.
 
